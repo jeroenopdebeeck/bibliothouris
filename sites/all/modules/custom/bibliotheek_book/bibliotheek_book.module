@@ -40,9 +40,9 @@ function bibliotheek_book_custom_submit($form, &$form_state) {
 function bibliotheek_book_form_validate($form, &$form_state) {
 
 
-    if ($form_state['values']['title'] == '' || empty($form_state['values']['field_isbn'][LANGUAGE_NONE][0]['value']) ||
+    if ($form_state['values']['title'] == '' || $form_state['values']['field_isbn'][LANGUAGE_NONE][0]['value'] == '' ||
         $form_state['values']['field_last_name'][LANGUAGE_NONE][0]['value'] == ''){
-        form_set_error('Error', t('Please fill in all mandatory fields.'));
+        drupal_set_message(t('Please fill in all mandatory fields.'),'error');
     }
 
 
