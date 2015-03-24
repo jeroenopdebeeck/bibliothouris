@@ -1,0 +1,50 @@
+<?php
+
+
+
+
+/*
+ * Implements hook_form_alter()
+ */
+
+function bibliotheek_book_form_alter(&$form, &$form_state, $form_id) {
+
+
+
+    if ($form_id == 'book_node_form'){
+
+        $destination = 'node/add/book';
+        unset($form['actions']['preview']);
+
+        $form['actions']['cancel'] = array(
+            '#markup' => l(t('Cancel'), $destination),
+            '#weight' => 20,
+        );
+
+
+        $form['actions']['submit']['#submit'][] = 'bibliotheek_book_custom_submit';
+        $form['#validate'][] = 'bibliotheek_book_form_validate';
+
+    }
+
+
+}
+
+function bibliotheek_book_custom_submit($form, &$form_state) {
+
+    $messages = drupal_get_messages('status');
+    drupal_set_message(t("The book has been registered."));
+
+}
+
+function bibliotheek_book_form_validate($form, &$form_state) {
+
+
+    if ($form_state['values']['title'] == '' || empty($form_state['values']['field_isbn'][LANGUAGE_NONE][0]['value']) ||
+        $form_state['values']['field_last_name'][LANGUAGE_NONE][0]['value'] == ''){
+        form_set_error('Error', t('Please fill in all mandatory fields.'));
+    }
+
+
+
+}

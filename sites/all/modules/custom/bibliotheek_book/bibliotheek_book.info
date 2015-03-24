@@ -1,0 +1,3 @@
+name = Book module
+description = module for books
+core = 7.x
