@@ -72,7 +72,7 @@ function isbn_field_formatter_info() {
     'isbn_default' => array(
       'label' => t('Not formated ISBN'),
       'description' => t('Display the ISBN number without format.'),
-      'field types' => array('value'),
+      'field types' => array('isbn'),
     ),
   );
   return $formats;

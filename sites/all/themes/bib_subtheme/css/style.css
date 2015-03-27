@@ -1644,3 +1644,19 @@ div.admin-panel .description {
 .bookcover{
     float: right;
 }
+
+#user-info-block1{
+   float: left;
+   text-align: left;
+   width: 250px;
+}
+#user-info-block2{
+    float: left;
+    text-align: center;
+    width: 250px;
+}
+#user-info-block3{
+    float: left;
+    text-align: right;
+    width: 250px;
+}

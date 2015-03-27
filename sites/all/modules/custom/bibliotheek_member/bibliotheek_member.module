@@ -1,0 +1,14 @@
+
+<?php
+
+/**
+* Implements hook_user_view_alter().
+*/
+
+function bibliotheek_member_user_view_alter(&$build) {
+$build['summary']['#title'] = '';
+$build['summary']['member_for']['#title'] = t('Member since');
+$build['summary']['member_for']['#markup'] = date('d/m/Y', $build['#account']->created);
+}
+
+
