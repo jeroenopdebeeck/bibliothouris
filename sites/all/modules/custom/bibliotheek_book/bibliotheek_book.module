@@ -56,8 +56,8 @@ function bibliotheek_book_form_validate($form, &$form_state) {
 
 function bibliotheek_book_menu() {
 
-    $items['node/get/ajax/%/%'] = array(
-        'page callback' => 'bibliotheek_book_ajax_get_ajax',
+    $items['node/add/book/%/%'] = array(
+        'page callback' => 'bibliotheek_book_add',
         'page arguments' => array(4),
         'type' => MENU_CALLBACK,
         'access arguments' => array('access content'),
@@ -75,43 +75,44 @@ function bibliotheek_book_menu() {
     return $items;
 }
 
-function bibliotheek_book_ajax_get_ajax() {
+function bibliotheek_book_add() {
 
     $node = node_load(arg(3));
     $user = user_load(arg(4));
-
+    $field_language = field_language('node', $node, 'field_lend_date');
 
     if (isset($node)) {
+        if (count($user->field_borrowed_books[$field_language]) < 3) {
 
-        $field_language = field_language('node', $node, 'field_lend_date');
-        $lenddate = new DateTime();
-        $date = new DateTime();
-        $duedate = $date->modify('+3 week');
-        $node->field_lend_date[$field_language][0]['value'] = $lenddate->format('Y-m-d H:i:s');
-        $node->field_lend_date[$field_language][0]['value2'] = $duedate->format('Y-m-d H:i:s');
+            $lenddate = new DateTime();
+            $date = new DateTime();
+            $duedate = $date->modify('+3 week');
+            $node->field_lend_date[$field_language][0]['value'] = $lenddate->format('Y-m-d H:i:s');
+            $node->field_lend_date[$field_language][0]['value2'] = $duedate->format('Y-m-d H:i:s');
 
-        if(count($user->field_borrowed_books[$field_language]) < 3) {
 
             $node->field_borrower['und'][0]['user'] = $user;
             $node->field_borrower['und'][0]['uid'] = arg(4);
 
             setAvailable($node);
 
-            node_save($node);
-        }
 
-        end($user->field_borrowed_books[$field_language]);
-        $key = key($user->field_borrowed_books[$field_language]);
-        $key++;
-        $user->field_borrowed_books[$field_language][$key]['nid'] = arg(3);
-        user_save($user);
+
+
+            end($user->field_borrowed_books[$field_language]);
+            $key = key($user->field_borrowed_books[$field_language]);
+            $key++;
+            $user->field_borrowed_books[$field_language][$key]['nid'] = arg(3);
+
+            node_save($node);
+            user_save($user);
+
+
+        }
 
 
     }
-
-
 }
-
 
 
 function bibliotheek_book_return() {
@@ -154,7 +155,7 @@ function bibliotheek_book_return() {
  * Implement hook_node_view()
  */
 
-function bibliotheek_book_node_view($node){
+function bibliotheek_book_node_view($node) {
 
 
     setAvailable($node);
@@ -163,7 +164,7 @@ function bibliotheek_book_node_view($node){
 }
 
 
-function setAvailable($node){
+function setAvailable($node) {
 
     if(empty($node->field_borrower)){
         $node->field_available['und'][0]['value'] = 1;

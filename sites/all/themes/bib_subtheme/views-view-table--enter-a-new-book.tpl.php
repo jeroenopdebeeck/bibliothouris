@@ -61,7 +61,7 @@
 
 <script>
     function myModule_ajax_load(id,uid) {
-        jQuery.get("http://localhost/bibliotheek/node/get/ajax/".concat(id).concat("/").concat(uid));
+        jQuery.get("http://localhost/bibliotheek/node/add/book/".concat(id).concat("/").concat(uid));
         location.reload();
     }
 </script>
