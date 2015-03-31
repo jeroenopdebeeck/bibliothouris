@@ -1643,6 +1643,8 @@ div.admin-panel .description {
 
 .bookcover{
     float: right;
+    clear: right;
+    margin-top: 20px;
 }
 
 #user-info-block1{
@@ -1659,4 +1661,20 @@ div.admin-panel .description {
     float: left;
     text-align: right;
     width: 250px;
+}
+
+.available{
+    float: right;
+    font-size: large;
+    text-transform: uppercase;
+    color: lightgreen;
+    clear: right;
+}
+
+.notavailable{
+    float: right;
+    font-size: large;
+    text-transform: uppercase;
+    color: red;
+    clear: right;
 }

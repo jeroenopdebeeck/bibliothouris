@@ -18,6 +18,8 @@
  *   field id, then row number. This matches the index in $rows.
  * @ingroup views_templates
  */
+
+include_once("workingDays.php");
 ?>
 <table <?php if ($classes) { print 'class="'. $classes . '" '; } ?><?php print $attributes; ?>>
     <?php if (!empty($title) || !empty($caption)) : ?>
@@ -40,16 +42,54 @@
 
         <tr <?php if ($row_classes[$row_count]) { print 'class="' . implode(' ', $row_classes[$row_count]) .'"';  } ?>>
             <?php foreach ($row as $field => $content): ?>
-                <?php if ( $field != 'nid'): ?>
+
+
+                <?php if($field == 'field_lend_date_1'){
+
+                    $date = strip_tags($content);
+                    $duedate = new DateTime($date);
+                    $today = new DateTime('2015-05-2');
+                    $nrdays = getWorkingDays($duedate,$today) - 1;
+                    $overdue = "0 days";
+                    $fine = 0;
+                    if($duedate < $today){
+                        $overdue = $nrdays;
+                        $fine = $nrdays * 0.30;
+                    }
+
+
+
+                } ?>
+                <?php if ( $field != 'nid' && $field !='nothing' && $field != 'nothing_1'): ?>
                 <td <?php if ($field_classes[$field][$row_count]) { print 'class="'. $field_classes[$field][$row_count] . '" '; } ?><?php print drupal_attributes($field_attributes[$field][$row_count]); ?>>
                     <?php print $content; ?>
                 </td>
                 <?php endif; ?>
 
-                <?php if ($field == 'nid'): ?>
-                    <?php $uid = arg(1); ?>
-                    <?php echo '<td><a class="btn" href="#" onclick="myModule_ajax_load( \'' . $content  .'\',\'' . $uid . '\')">Add book</a></td>'; ?>
+                <?php if ($field == 'nothing'): ?>
+
+                         <td> <?php print $overdue; ?></td>
+
                 <?php endif; ?>
+
+                <?php if ($field == 'nothing_1'): ?>
+
+                       <td> <?php print "€ " . $fine; ?> </td>
+
+                <?php endif; ?>
+
+                <?php if ($field == 'nid'): ?>
+
+                    <?php $uid = arg(1); ?>
+                    <?php echo '<td><a class="btn" href="#" onclick="myModule_return_book( \'' . $content  .'\',\'' . $uid . '\')">Return book</a></td>'; ?>
+                <?php endif; ?>
+
+
+
+
+
+
+
             <?php endforeach; ?>
 
         </tr>
@@ -60,10 +100,13 @@
 
 
 <script>
-    function myModule_ajax_load(id,uid) {
-        jQuery.get("http://localhost/bibliotheek/node/get/ajax/".concat(id).concat("/").concat(uid));
+    function myModule_return_book(id,uid) {
+        jQuery.get("http://localhost/bibliotheek/node/return/book/".concat(id).concat("/").concat(uid));
         location.reload();
     }
 </script>
+
+
+
 
 

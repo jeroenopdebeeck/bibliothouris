@@ -33,6 +33,7 @@
  *
  * @ingroup themeable
  */
+
 ?>
 
 <div class="profile"<?php print $attributes; ?>>
@@ -58,7 +59,7 @@
         $postalcode = preg_replace('/\s+/','',$postalcode);
         ?>
 
-        <?php print $user_profile['field_address']['0']['#markup']?> <br>
+        <?php print $user_profile['field_street']['0']['#markup'];?>  <?php print $user_profile['field_number']['0']['#markup']?>  <br>
         <?php print $postalcode . ' ' . $user_profile['field_city']['0']['#markup']  ?>
     </div>
 

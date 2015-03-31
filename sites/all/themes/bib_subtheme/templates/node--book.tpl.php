@@ -80,6 +80,17 @@
 ?>
 <div id="node-<?php print $node->nid; ?>" class="<?php print $classes; ?> clearfix"<?php print $attributes; ?>>
 
+    <div class ='available'>
+
+
+        <?php if ($content['field_available']['#items'][0]['value'] == '1'){
+            print 'Available';}?>
+        </div>
+    <div class ='notavailable'>
+       <?php if($content['field_available']['#items'][0]['value'] == '0'){
+            print 'Not Availabe';}
+        ?>
+   </div>
     <div class ='bookcover'><?php print(render($content['field_book_cover'])); ?></div>
     <div class ='author'> <?php print(t('Author'));?>: <?php print(render($content['field_first_name'])); ?><?php print(render($content['field_last_name'])); ?> </div>
     <div class ='isbn'><?php print(render($content['field_isbn'])); ?></div>
