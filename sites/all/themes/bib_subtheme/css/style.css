@@ -1664,7 +1664,7 @@ div.admin-panel .description {
 }
 
 .available{
-    float: right;
+
     font-size: large;
     text-transform: uppercase;
     color: lightgreen;
@@ -1672,7 +1672,7 @@ div.admin-panel .description {
 }
 
 .notavailable{
-    float: right;
+
     font-size: large;
     text-transform: uppercase;
     color: red;

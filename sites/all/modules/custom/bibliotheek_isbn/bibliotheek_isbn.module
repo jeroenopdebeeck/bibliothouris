@@ -1,0 +1,32 @@
+<?php
+
+
+/*
+ * Implements hook_field_info
+ */
+
+
+function bibliotheek_isbn_field_info() {
+
+return array(
+
+    'text' => array(
+        'label' => t('Isbn'),
+        'description' => t('This field stores an ISBN number in the database'),
+        'settings' => array(max_length => 13),
+        'default_widget' => 'isbn_textfield',
+        'default_formatter' => 'isbn_default',
+    ),
+);
+}
+
+/*
+ * Implements hook_field_validate()
+ */
+
+function bibliotheek_isbn_field_validate($entity_type, $entity, $field, $instance, $langcode, $items, &$errors)
+{
+    foreach ($items as $delta => $item) {
+
+    }
+}
