@@ -1647,34 +1647,36 @@ div.admin-panel .description {
     margin-top: 20px;
 }
 
-#user-info-block1{
+.user-info-block1{
    float: left;
    text-align: left;
    width: 250px;
 }
-#user-info-block2{
+.user-info-block2{
     float: left;
-    text-align: center;
+    text-align: left;
     width: 250px;
 }
-#user-info-block3{
+.user-info-block3{
     float: left;
-    text-align: right;
+    text-align: left;
     width: 250px;
 }
 
-.available{
+.available-Available{
 
     font-size: large;
     text-transform: uppercase;
     color: lightgreen;
     clear: right;
+    float: right;
 }
 
-.notavailable{
+.available-Loaned{
 
     font-size: large;
     text-transform: uppercase;
     color: red;
     clear: right;
+    float: right;
 }

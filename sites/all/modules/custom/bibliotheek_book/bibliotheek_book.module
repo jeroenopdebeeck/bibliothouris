@@ -43,18 +43,26 @@ function bibliotheek_book_form_alter(&$form, &$form_state, $form_id) {
             '#title_display' => 'invisible',
             '#size' => 15,
             '#default_value' => '',
-            '#attributes'=> array(
-              'title' => t('Enter the terms you wish to search for')
+            '#attributes' => array(
+                'title' => t('Enter the terms you wish to search for')
             ),
-            '#autocomplete_path' => 'example/autocomplete',
+            '#autocomplete_path' => 'booktitle/autocomplete',
 
         );
+    }
+
+    if($form_id == 'views_exposed_form' && $form["#id"] == "views-exposed-form-list-of-all-books-page") {
+        $form['title']['#autocomplete_path'] = 'booktitle/autocomplete';
+        $form['field_first_name_value']['#autocomplete_path'] = 'bookfirstname/autocomplete';
 
 
     }
 
 
 }
+
+
+
 
 function bibliotheek_book_custom_submit($form, &$form_state) {
 
@@ -92,9 +100,16 @@ function bibliotheek_book_menu() {
         'access arguments' => array('access content'),
     );
 
-    $items['example/autocomplete'] = array(
+    $items['booktitle/autocomplete'] = array(
         'page callback' => 'bibliotheek_book_title_autocomplete',
         'access arguments' => array('access content'),
+        'type' => MENU_CALLBACK
+    );
+
+    $items['bookfirstname/autocomplete/%'] = array(
+        'page callback' => 'bibliotheek_book_first_name_autocomplete',
+        'access arguments' => array('access content'),
+        'page arguments' => array(3),
         'type' => MENU_CALLBACK
     );
 
@@ -140,7 +155,7 @@ function bibliotheek_book_add($nid,$uid) {
             drupal_set_message(t("A user can only lend a maximum of 3 books"),"error");
         }
 
-        drupal_goto("http://localhost/bibliotheek/user/5");
+        drupal_goto("http://localhost/bibliotheek/user/" . $uid);
     }
 }
 
@@ -172,7 +187,7 @@ function bibliotheek_book_return($nid,$uid) {
         user_save($user);
 
         drupal_set_message(t("Book has been returned"));
-        drupal_goto("http://localhost/bibliotheek/user/5");
+        drupal_goto("http://localhost/bibliotheek/user/". $uid);
 
 
 
@@ -213,6 +228,10 @@ function bibliotheek_book_views_pre_render(&$view) {
 
 
 
+    if($view->name == "book"){
+
+    }
+
     if ($view->name == "enter_a_new_book") {
 
             $view->field['nothing']->options['alter']['text'] = arg(1);
@@ -228,12 +247,14 @@ function bibliotheek_book_views_pre_render(&$view) {
             $overdue = bibliotheek_calculate_days_overdue($result->nid);
            $fine = bibliotheek_calculate_fine($result->nid);
 
-            $view->field['nothing']->options['alter']['text'] = $overdue . "  Days";
-            $view->field['nothing_1']->options['alter']['text'] = "€ ".$fine;
+            $view->field['nothing']->options['alter']['text'] = t('@days overdue', array('@days' => $overdue));
+            $view->field['nothing_1']->options['alter']['text'] = t('€ @amount', array('@amount' => $fine));
 
         }
         $view->field['nothing_2']->options['alter']['text'] = arg(1);
     }
+
+
 
 
 
@@ -261,7 +282,7 @@ function bibliotheek_calculate_days_overdue($nid) {
 
     $overdue = 0;
 
-    $date = $getnode->field_lend_date['und'][0]['value2'];
+    $date = $getnode->field_lend_date[LANGUAGE_NONE][0]['value2'];
     $duedate = new DateTime($date);
     $today = new DateTime('2015-05-2');
 
@@ -298,5 +319,32 @@ function bibliotheek_book_title_autocomplete($string) {
     drupal_json_output($matches);
 
 }
+
+
+
+function bibliotheek_book_first_name_autocomplete($string) {
+
+
+    $matches = array();
+    $query = db_select('field_data_field_first_name')
+        ->fields('field_data_field_first_name', array('field_first_name_value'))
+        ->condition('field_data_field_first_name.field_first_name_value', '%' . db_like($string) . '%', 'LIKE');
+
+
+
+    foreach ($query->execute() as $row) {
+
+        $matches[$row->field_first_name_value] = $row->field_first_name_value;
+
+    }
+
+    if(empty($matches)){
+        $matches[""] = "No first name found";
+    }
+
+    drupal_json_output($matches);
+
+}
+
 
 
